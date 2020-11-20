@@ -8,6 +8,7 @@ const App = () => {
   const [ message, setMessage ] = useState('')
   const [ isError, setIsError ] = useState(false)
 
+
   useEffect(() => {
     phonebookAPI.getAll().then(response => setPersons(response.data)).catch(error => console.log(error))
   }, [])
@@ -29,12 +30,7 @@ const App = () => {
       }).catch(error => {
         console.log(error)
         setIsError(true)
-        if (error.response.status === 404) {
-          setMessage(`Person ${temp.name} has already been removed`)
-        } else {
-          setMessage('Something went wrong when updating person')
-        }
-        
+        setMessage(error.response.data)        
       })
     } else {
       phonebookAPI.create(addable).then(response => {
@@ -42,7 +38,7 @@ const App = () => {
         setMessage(`${addable.name} added`)
         setIsError(false)
       }).catch(error => {
-        setMessage('Something went wrong when adding new person')
+        setMessage(error.response.data)
         setIsError(true)
       })
     }
@@ -59,10 +55,10 @@ const App = () => {
         setIsError(false)
       }).catch(error => {
         if(error.response.status === 404) {
-          setMessage(`Person ${person.name} has already been removed`)
+          setMessage(error.response.data)
           setPersons(persons.filter(p => p.id !== person.id))
         } else {
-          setMessage('Something went wrong when removing person')
+          setMessage(error.response.data)
         }
         setIsError(true)
       })

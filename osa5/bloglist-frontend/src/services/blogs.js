@@ -7,7 +7,15 @@ const getAll = () => {
 }
 
 const create = (title, author, url, token) => {
-  return axios.post(baseUrl, {title, author, url}, { headers: {'Authorization': `bearer ${token}`}}).then(response => response.data)
+  return axios.post(baseUrl, { title, author, url }, { headers: { 'Authorization': `bearer ${token}` } }).then(response => response.data)
 }
 
-export default { getAll, create }
+const like = (blog) => {
+  return axios.put(`${baseUrl}/${blog.id}`, { ...blog, likes: blog.likes + 1, user: blog.user ? blog.user.id : undefined }).then(response => response.data)
+}
+
+const remove = (id, token) => {
+  return axios.delete(`${baseUrl}/${id}`, { headers: { 'Authorization': `bearer ${token}` } }).then(response => response.data)
+}
+
+export default { getAll, create, like, remove }

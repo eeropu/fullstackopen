@@ -7,14 +7,15 @@ const AnecdoteForm = () => {
 
     const dispatch = useDispatch()
 
-    const addNew = (e) => {
+    const addNew = async (e) => {
         e.preventDefault()
         const content = document.getElementById('newAnecdote').value
-        dispatch(newAnecdote(content))
-        dispatch(setNotification(`You added "${content}"`))
-        setTimeout(() => {
-            dispatch(setNotification(''))
-        }, 5000)
+        try {
+            dispatch(newAnecdote(content))
+            dispatch(setNotification(`You added "${content}"`, 5))
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (

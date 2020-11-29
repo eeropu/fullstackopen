@@ -3,12 +3,25 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
-import { gql, useApolloClient, useLazyQuery } from '@apollo/client'
+import { gql, useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
 
 const LOGGED_USER = gql`
   query{
     me{
       favoriteGenre
+    }
+  }
+`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title,
+      published,
+      author {
+        name
+      },
+      genres
     }
   }
 `
@@ -20,6 +33,12 @@ const App = () => {
   const client = useApolloClient()
 
   const [loggedUser, result] = useLazyQuery(LOGGED_USER)
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      alert(`new book added: ${subscriptionData.data.bookAdded.title}`)
+    }
+  })
 
   useEffect(() => {
     const tokenInStorage = localStorage.getItem('library-app-user-token')

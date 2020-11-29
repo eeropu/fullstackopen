@@ -69,7 +69,6 @@ const NewBook = (props) => {
     setAuthor('')
     setGenres([])
     setGenre('')
-    window.location.reload()
   }
 
   const addGenre = () => {

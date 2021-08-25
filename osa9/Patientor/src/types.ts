@@ -4,9 +4,43 @@ export type Diagnosis = {
     latin?: string
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Entry {
+interface BaseEntry {
+    id: string,
+    date: string,
+    specialist: string,
+    description: string,
+    diagnosisCodes?: Array<Diagnosis['code']>,
 }
+
+interface HospitalEntry extends BaseEntry {
+    type: 'Hospital',
+    discharge: {
+        date: string,
+        criteria: string
+    }
+}
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+    type: "OccupationalHealthcare",
+    employerName: string,
+    sickLeave?: {
+        startDate: string,
+        endDate: string
+    }
+}
+
+interface HealthCheckEntry extends BaseEntry {
+    type: "HealthCheck",
+    healthCheckRating: 0 | 1 | 2 | 3,
+}
+
+export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
+
+export type newHospitalEntry = Omit<HospitalEntry, 'id'>;
+export type newOccuptaionalHealthcareEntry = Omit<OccupationalHealthcareEntry, 'id'>;
+export type newHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+
+export type newEntry = newHospitalEntry | newOccuptaionalHealthcareEntry | newHealthCheckEntry;
 
 export interface Patient {
   id: string;
